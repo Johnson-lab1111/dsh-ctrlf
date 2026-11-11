@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 300" width="880" height="300" role="img" aria-label="DSH CtrlF find bar over a rendered conversation">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3d7dff"/>
+      <stop offset="1" stop-color="#7a5cff"/>
+    </linearGradient>
+    <style>
+      .b { fill: #ffffff; }
+      .t { font: 13.5px/1.6 "Segoe UI", system-ui, sans-serif; fill: #2a2e35; }
+      .t2 { font: 13.5px/1.6 "Segoe UI", system-ui, sans-serif; fill: #8a9099; }
+      .hl { fill: #3d7dff; fill-opacity: 0.28; }
+      .hlA { fill: #3d7dff; fill-opacity: 0.75; }
+      .hlAT { font: 13.5px/1.6 "Segoe UI", system-ui, sans-serif; fill: #ffffff; }
+      .ui { font: 13px "Segoe UI", system-ui, sans-serif; fill: #5a6068; }
+      .uiS { font: 12px "Segoe UI", system-ui, sans-serif; fill: #5a6068; }
+    </style>
+  </defs>
+
+  <rect width="880" height="300" fill="#f5f6f8"/>
+  <rect x="40" y="16" width="800" height="268" rx="12" class="b"/>
+  <rect x="40" y="16" width="800" height="268" rx="12" fill="none" stroke="#e2e5ea"/>
+
+  <!-- 正文 -->
+  <text x="72" y="70" class="t">The find bar reads the transcript the Client already rendered and</text>
+  <text x="72" y="94" class="t">paints matches with the CSS Custom Highlight API. Nothing reflows,</text>
+  <text x="72" y="118" class="t">no node is wrapped, and scroll anchoring keeps working.</text>
+
+  <text x="72" y="152" class="t">Searching "find" below shows every hit at once:</text>
+  <rect x="72" y="166" width="34" height="20" rx="3" class="hl"/>
+  <text x="72" y="181" class="t">find</text>
+  <text x="103" y="181" class="t"> the bar, </text>
+  <rect x="176" y="166" width="34" height="20" rx="3" class="hl"/>
+  <text x="176" y="181" class="t">find</text>
+  <text x="207" y="181" class="t"> a match, </text>
+  <rect x="294" y="166" width="34" height="20" rx="3" class="hlA"/>
+  <text x="294" y="181" class="hlAT">find</text>
+  <text x="325" y="181" class="t"> the current one.</text>
+
+  <text x="72" y="212" class="t2">Phrases split by &lt;strong&gt; still match; a match never crosses a paragraph.</text>
+  <text x="72" y="236" class="t2">A debounced observer rescans as the transcript streams in.</text>
+
+  <!-- 查找条 -->
+  <g>
+    <rect x="628" y="34" width="252" height="36" rx="10" fill="#ffffff" stroke="#d8dbe0"/>
+    <text x="642" y="57" class="ui">find</text>
+    <text x="716" y="57" class="uiS">3 / 12</text>
+    <line x1="768" y1="44" x2="768" y2="60" stroke="#e2e5ea"/>
+    <text x="784" y="57" class="ui">Aa</text>
+    <path d="M806 52l4-4 4 4" fill="none" stroke="#5a6068" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M826 50l4 4 4-4" fill="none" stroke="#5a6068" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M852 48l8 8M860 48l-8 8" fill="none" stroke="#5a6068" stroke-width="1.7" stroke-linecap="round"/>
+  </g>
+
+  <!-- 图标点缀 -->
+  <rect x="72" y="252" width="0" height="0" fill="url(#g)"/>
+</svg>

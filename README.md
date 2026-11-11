@@ -1,40 +1,73 @@
-# dsh-find-in-conversation
+# DSH CtrlF
 
-会话内查找：在正在显示的会话正文里搜文字，全部命中高亮，可在命中之间前后跳转。
+Press **Ctrl+F** inside a DeepSeek Harness conversation and search the transcript
+you are looking at: every match is highlighted, and you step through them
+without the page jumping around.
 
-## 用法
+![DSH CtrlF](docs/preview.svg)
 
-| 操作 | 按键 |
+## What it does
+
+| Action | Key |
 | --- | --- |
-| 打开查找条 | `Ctrl+F`（macOS `Cmd+F`） |
-| 下一个匹配 | `Enter` 或 `F3` |
-| 上一个匹配 | `Shift+Enter` / `Shift+F3` |
-| 关闭 | `Esc` 或右侧 × |
-| 区分大小写 | 条上的 `Aa`（记住选择） |
+| Open the find bar | `Ctrl+F` / `Cmd+F` |
+| Next match | `Enter` or `F3` |
+| Previous match | `Shift+Enter` or `Shift+F3` |
+| Close | `Esc` or the × button |
+| Match case | the `Aa` button (remembered) |
 
-结果计数显示为 `当前 / 总数`，无结果显示「无结果」。匹配发生在正文的文字节点上，跨 `<strong>`、`<em>`、断行切开的短语同样能整体命中；两个段落之间不会拼出假匹配。
+The counter reads `current / total`; an empty result reads "No results".
 
-## 实现要点
+## Why it feels different from a browser find
 
-- **不动 DOM**：不包 `<mark>`、不改节点，用 CSS Custom Highlight API（`::highlight()`）上色，因此不引起重排，宿主自己的滚动锚定与虚拟化照常工作。
-- **虚拟拼接匹配**：把可见文字节点拼成一个字符串再找，块级边界插入 NUL 哨兵，所以匹配不跨段落。
-- **流式友好**：正文增长（新回合 / 打字机输出）由 `MutationObserver` 防抖重扫，并且不会把用户当前的命中位置打回第 1 个。
-- **主题跟随**：颜色全部走 `--dsw-alias-*` 令牌，明暗主题自动适配。
-- **多语言**：zh / en / ja / es / fr / de / ru / pt。
+- **Matches across inline markup.** The transcript is rendered Markdown, so one
+  sentence is often several text nodes (`<strong>`, `<em>`, soft line breaks).
+  DSH CtrlF searches a virtual concatenation of the visible text nodes, so a
+  phrase split by markup still matches. Block boundaries insert a NUL sentinel
+  no needle can contain, so a match never straddles two paragraphs.
+- **Does not touch the DOM.** No `<mark>` wrapping, no node cloning. Matches are
+  painted with the CSS Custom Highlight API (`::highlight()`), which is a
+  presentation layer: nothing reflows and the host's own scroll anchoring and
+  virtualisation keep working.
+- **Survives streaming.** New turns and token-by-token output keep arriving while
+  the bar is open. A debounced `MutationObserver` rescans, and a rescan never
+  throws the user back to match #1.
+- **Looks like the host.** Colours come from the `--dsw-alias-*` theme tokens, so
+  light and dark themes both work; UI text goes through `ctx.locale`
+  (zh / en / ja / es / fr / de / ru / pt).
 
-## 结构
+## Install
 
-| 文件 | 作用 |
+DSH resolves bundles from a GitHub package. Pick whichever fits your setup:
+
+```bash
+# from the Harness UI: Plugins -> Add plugin -> paste the repository
+# or from a checkout
+git clone https://github.com/Johnson-lab1111/dsh-ctrlf.git
+```
+
+Then install the package directory as a bundle in your profile and enable it.
+The bundle contributes one Client row; there is nothing to configure.
+
+## Files
+
+| Path | Role |
 | --- | --- |
-| `index.js` | Host 半侧：仅一个到达计数端点 |
-| `client.js` | 浏览器半侧：查找条组件、匹配与高亮、滚动 |
-| `cordis.patch.yml` | 插入 `find-in-conversation` 插件行 |
-| `locale/*.json` | 插件列表里的标题与说明 |
+| `client.js` | Browser half: the find bar, matching, highlighting, scrolling |
+| `index.js` | Host half: intentionally empty (the bundle row needs a module) |
+| `cordis.patch.yml` | Inserts the `dsh-ctrlf` plugin row |
+| `locale/*.json` | Title and description shown in the plugin list |
+| `icon.svg` | Plugin icon |
 
-## 诊断端点
+## Privacy
 
-`GET /api/find-in-conversation/loaded` — 浏览器每加载一次插件上报一次，响应只含到达次数与最后到达时间，用于确认已打开的页面是否执行了新 bundle。该路由走宿主的 owner-only 准入，未持会话 cookie 的请求在进入处理函数前就被拒绝。
+- No network requests. The module makes none at all.
+- No session events, no writes to disk.
+- The search query lives in page memory only and is dropped when the bar closes.
+- The only persisted value is one boolean, `dsh.find.caseSensitive`, in
+  `localStorage`.
+- The Host half registers no service, no route, and no global.
 
-## 数据处理
+## Licence
 
-插件不写会话事件、不落盘、不做任何网络请求（除上述同源计数上报）。查找关键词只存在于页面内存里的 `store`，关闭查找条即丢弃；唯一持久化的是「区分大小写」这个布尔偏好，存于 `localStorage` 的 `dsh.find.caseSensitive`。
+MIT — see [LICENSE](LICENSE).

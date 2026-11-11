@@ -22,9 +22,6 @@ window.__ModuleLoader__.load({
      */
 
     const NS = 'dsh-ctrlf'
-    // Bumped whenever the module's behaviour changes; surfaced on the test hook
-    // so a page still running an older bundle is obvious instead of puzzling.
-    const BUILD = '3'
     const SCROLL_SELECTOR = '[data-conversation-scroll]'
     const FALLBACK_SELECTORS = ['[data-slot="conversation.session"]', 'main', '#root']
     const ALL_HIGHLIGHT = 'dsh-find-all'
@@ -732,33 +729,6 @@ window.__ModuleLoader__.load({
 
       ctx.effect(() => () => clearHighlights(), 'dsh-ctrlf: highlight cleanup')
 
-      // Report one arrival to the Host so a profile reload can be confirmed
-      // without opening a debugger. Failure is silent: the bar does not depend
-      // on it, and a deployment without the HTTP route simply has no ping.
-      try {
-        if (location.protocol === 'http:' || location.protocol === 'https:') {
-          fetch('/api/dsh-ctrlf/loaded', { cache: 'no-store' }).catch(() => {})
-        }
-      } catch (error) {
-        // ignore
-      }
-
-      // A small documented surface for tests and for anyone poking at the
-      // running page: reading is free, and nothing here mutates the transcript.
-      window.__DSH_FIND__ = {
-        build: BUILD,
-        open: openFind,
-        close: closeFind,
-        store: store,
-        collectRanges: collectRanges,
-        flatten: flatten,
-        activeScrollRoot: activeScrollRoot,
-        highlightsAvailable: highlightsAvailable,
-        highlights: () => ({
-          all: highlightsAvailable() ? (CSS.highlights.get(ALL_HIGHLIGHT)?.size ?? 0) : 0,
-          active: highlightsAvailable() ? (CSS.highlights.get(ACTIVE_HIGHLIGHT)?.size ?? 0) : 0,
-        }),
-      }
     }
 
     return {

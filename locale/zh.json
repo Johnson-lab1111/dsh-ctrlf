@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "会话内查找",
-    "description": "在会话正文中查找文字，高亮全部命中并在命中之间跳转（Ctrl+F）。"
+    "title": "DSH CtrlF",
+    "description": "会话内查找：Ctrl+F 在正文中查找文字，全部命中高亮并可前后跳转。"
   }
 }
