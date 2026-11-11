@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "In-conversation find",
+    "description": "Find text in the rendered conversation, highlight every match and step between them (Ctrl+F)."
+  }
+}

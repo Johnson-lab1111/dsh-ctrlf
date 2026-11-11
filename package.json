@@ -1,0 +1,54 @@
+{
+  "name": "dsh-ctrlf",
+  "version": "1.0.0",
+  "private": true,
+  "description": "In-conversation find bar for DeepSeek Harness: press Ctrl+F over the rendered transcript, every match is highlighted, step through them.",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.md",
+    "LICENSE"
+  ],
+  "icon": "./icon.svg",
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "dsh-plugin",
+    "find",
+    "search",
+    "ctrl-f",
+    "in-conversation"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Johnson-lab1111/dsh-ctrlf.git"
+  },
+  "homepage": "https://github.com/Johnson-lab1111/dsh-ctrlf#readme",
+  "bugs": {
+    "url": "https://github.com/Johnson-lab1111/dsh-ctrlf/issues"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-conversation"
+      ]
+    }
+  },
+  "license": "MIT"
+}
